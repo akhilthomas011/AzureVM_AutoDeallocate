@@ -33,15 +33,9 @@ module virtualMachine './modules/virtual-machine/main.json' = {
       enabled: true
       fileData: [
         {
-          storageAccountId: '<storageAccountId>'
           uri: '<uri>'
         }
       ]
-      tags: {
-        Environment: 'Non-Prod'
-        'hidden-title': 'This is visible in the resource name'
-        Role: 'DeploymentValidation'
-      }
     }
     managedIdentities: {
       systemAssigned: true
