@@ -1,4 +1,5 @@
-﻿Set-Location $PSScriptRoot
+﻿[Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+Set-Location $PSScriptRoot
 $ErrorActionPreference = "Stop"
 
 #variables
@@ -33,7 +34,8 @@ function log_ () {
 log_ "###### Begin ##########"
 
 #Import required modules
-Install-Module -Name Microsoft.PowerShell.PSResourceGet -Force
+Install-PackageProvider -Name NuGet -Force
+Install-Module -Name Microsoft.PowerShell.PSResourceGet -Repository PSGallery -Force
 if (Get-InstalledPSResource Az.Compute -ErrorAction SilentlyContinue) {
     Write-Host "Module 'Az.Compute' exists"
     Import-Module Az.Compute

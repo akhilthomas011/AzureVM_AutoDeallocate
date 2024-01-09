@@ -1,4 +1,5 @@
-﻿Set-Location $PSScriptRoot
+﻿[Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+Set-Location $PSScriptRoot
 $ErrorActionPreference = "Stop"
 
 $TaskName = "Auto_Shutdown_Scheduler"
@@ -67,7 +68,8 @@ catch {
 }
 
 #Install the 'Az.Compute' module
-Install-Module -Name Microsoft.PowerShell.PSResourceGet -Force
+Install-PackageProvider -Name NuGet -Force
+Install-Module -Name Microsoft.PowerShell.PSResourceGet -Repository PSGallery -Force
 if (Get-InstalledPSResource Az.Compute -ErrorAction 'Continue') {
   Write-Host "Module 'Az.Compute' exists"
   Import-Module Az.Compute
