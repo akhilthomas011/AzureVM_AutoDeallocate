@@ -68,7 +68,7 @@ param vmName string = 'simple-vm'
   'Standard'
   'TrustedLaunch'
 ])
-param securityType string = 'TrustedLaunch'
+param securityType string = 'Standard'
 
 var storageAccountName = 'bootdiags${uniqueString(resourceGroup().id)}'
 var nicName = 'myVMNic'
@@ -286,7 +286,8 @@ resource customscriptextension 'Microsoft.Compute/virtualMachines/extensions@202
 }
 
 resource roleAssignment 'Microsoft.Authorization/roleAssignments@2020-04-01-preview' = {
-  name: '-${vm.name}-VMContributorRoleAssignment'
+  name: guid(subscription().subscriptionId, builtInRoleNames[roleDefinitionIdOrName], '${vm.name}')
+  scope: vm
   properties: {
     description: 'This role assignment gives the mananged identity of vm ${vm.name} with VM Contributor rights in the resource level'
     principalId: vm.identity.principalId

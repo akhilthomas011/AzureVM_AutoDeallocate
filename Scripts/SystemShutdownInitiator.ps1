@@ -33,6 +33,7 @@ function log_ () {
 log_ "###### Begin ##########"
 
 #Import required modules
+Install-Module -Name Microsoft.PowerShell.PSResourceGet -Force
 if (Get-InstalledPSResource Az.Compute -ErrorAction SilentlyContinue) {
     Write-Host "Module 'Az.Compute' exists"
     Import-Module Az.Compute

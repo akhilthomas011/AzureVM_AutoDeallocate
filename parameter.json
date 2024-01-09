@@ -6,7 +6,7 @@
       "value": "azurevm01"
     },
     "adminPassword": {
-      "value": "demoPassword"
+      "value": "demoPassword#123"
     },
     "adminUsername": {
       "value": "demouser"
