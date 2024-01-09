@@ -70,7 +70,7 @@ catch {
 #Install the 'Az.Compute' module
 Install-PackageProvider -Name NuGet -Force
 Install-Module -Name Microsoft.PowerShell.PSResourceGet -Repository PSGallery -Force
-if (Get-InstalledPSResource Az.Compute -ErrorAction 'Continue') {
+if (Get-InstalledPSResource Az.Computsd -ErrorAction SilentlyContinue) {
   Write-Host "Module 'Az.Compute' exists"
   Import-Module Az.Compute
 } 
