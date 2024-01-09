@@ -1,10 +1,11 @@
-﻿cd $PSScriptRoot
+﻿Set-Location $PSScriptRoot
+$ErrorActionPreference = "Stop"
 
 $TaskName = "Auto_Shutdown_Scheduler"
-$argument = '-ExecutionPolicy Bypass -File "' + $PSScriptRoot+ '\SystemShutdownInitiator.ps1"'
+$argument = '-ExecutionPolicy Bypass -File "' + $PSScriptRoot + '\SystemShutdownInitiator.ps1"'
 
 #config xml for task scheduler
-$taskxml= [xml]'<?xml version="1.0" encoding="UTF-16"?>
+$taskxml = [xml]'<?xml version="1.0" encoding="UTF-16"?>
 <Task version="1.2" xmlns="http://schemas.microsoft.com/windows/2004/02/mit/task">
   <Triggers>
     <CalendarTrigger>
@@ -55,19 +56,25 @@ $taskxml= [xml]'<?xml version="1.0" encoding="UTF-16"?>
 </Task>'
 
 #Create the scheduled task
-Register-ScheduledTask -Xml $taskxml.InnerXml -TaskName $TaskName -User "NT AUTHORITY\SYSTEM"
-$Action = New-ScheduledTaskAction -Execute "powershell" -Argument $argument -WorkingDirectory "$PSScriptRoot"
-Set-ScheduledTask -TaskName $TaskName -Action $Action -User "NT AUTHORITY\SYSTEM"
+try {
+  Register-ScheduledTask -Xml $taskxml.InnerXml -TaskName $TaskName -User "NT AUTHORITY\SYSTEM"
+  $Action = New-ScheduledTaskAction -Execute "powershell" -Argument $argument -WorkingDirectory "$PSScriptRoot"
+  Set-ScheduledTask -TaskName $TaskName -Action $Action -User "NT AUTHORITY\SYSTEM"
+} 
+catch {
+  Write-Host "Couldn't register the Scheduled Task"
+  exit 1
+}
 
 #Install the 'Az.Compute' module
 Install-Module -Name Microsoft.PowerShell.PSResourceGet -Force
-if (Get-InstalledPSResource Az.Compute -ErrorAction SilentlyContinue) {
-    Write-Host "Module 'Az.Compute' exists"
-    Import-Module Az.Compute
+if (Get-InstalledPSResource Az.Compute -ErrorAction 'Continue') {
+  Write-Host "Module 'Az.Compute' exists"
+  Import-Module Az.Compute
 } 
 else {
-    Write-Host "Module 'Az.Compute' does not exist"
-    Install-PSResource Az.Compute -TrustRepository
-    Import-Module Az.Compute
+  Write-Host "Module 'Az.Compute' does not exist"
+  Install-PSResource Az.Compute -TrustRepository
+  Import-Module Az.Compute
 }
 

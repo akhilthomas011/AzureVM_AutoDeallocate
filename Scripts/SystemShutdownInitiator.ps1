@@ -1,4 +1,4 @@
-﻿cd $PSScriptRoot
+﻿Set-Location $PSScriptRoot
 $ErrorActionPreference = "Stop"
 
 #variables
@@ -23,7 +23,7 @@ function log_ () {
     if (!(Test-Path $logFile)) {
         New-Item -Path $logFile -ItemType file -Force
     }    
-    if ($(Get-Item $logFile).Length / 10KB -gt $maxLogSize){
+    if ($(Get-Item $logFile).Length / 10KB -gt $maxLogSize) {
         Remove-Item $logFile -Force
     }
     Add-Content $logFile "$(Get-Date): $args"
@@ -57,14 +57,14 @@ catch {
 #Get VM tags
 $vm = (Invoke-WebRequest -Uri 'http://169.254.169.254/metadata/instance/compute?api-version=2018-02-01' -usebasicparsing -Method GET -Headers @{Metadata = "true" }).Content | ConvertFrom-Json
 $($vm.tags).Split(';') | foreach {
-    if($($_.Split(':')[0]) -imatch "$tagName_MinimumSessionIdleTime") {
-        $tags[$tagName_MinimumSessionIdleTime]= $_.Split(':')[1]
+    if ($($_.Split(':')[0]) -imatch "$tagName_MinimumSessionIdleTime") {
+        $tags[$tagName_MinimumSessionIdleTime] = $_.Split(':')[1]
     }   
-    if($($_.Split(':')[0]) -imatch "$tagName_MinimumStandbyTime") {
-        $tags[$tagName_MinimumStandbyTime]= $_.Split(':')[1]
+    if ($($_.Split(':')[0]) -imatch "$tagName_MinimumStandbyTime") {
+        $tags[$tagName_MinimumStandbyTime] = $_.Split(':')[1]
     }
-    if($($_.Split(':')[0]) -imatch "$tagName_SessionStatusCheckInterval") {
-        $tags[$tagName_SessionStatusCheckInterval]= $_.Split(':')[1]
+    if ($($_.Split(':')[0]) -imatch "$tagName_SessionStatusCheckInterval") {
+        $tags[$tagName_SessionStatusCheckInterval] = $_.Split(':')[1]
     }
 }
 log_ "VM: $($vm.name); RG: $($vm.resourceGroupName); SubscriptionID: $($vm.subscriptionId)"
@@ -79,8 +79,8 @@ $Task | Set-ScheduledTask
 
 . .\Get-UserSessions.ps1
 log_  "Session Finder script executed"
-$activeSessions = Get-UserSession | ? {($_.State -eq "Active")}  #Get all Active sessions
-$recentSessions = Get-UserSession -parseIdleTime | ? {($_.idletime -lt $(New-TimeSpan -minutes $tags[$tagName_MinimumSessionIdleTime])) }   #Get all recent sessions
+$activeSessions = Get-UserSession | ? { ($_.State -eq "Active") }  #Get all Active sessions
+$recentSessions = Get-UserSession -parseIdleTime | ? { ($_.idletime -lt $(New-TimeSpan -minutes $tags[$tagName_MinimumSessionIdleTime])) }   #Get all recent sessions
 $startTime = (Get-CimInstance -ClassName win32_operatingsystem | select lastbootuptime).lastbootuptime  #Get the time of last boot
 $Uptime = (NEW-TIMESPAN -Start $startTime -End $(Get-Date)).TotalMinutes                                   #Get time since last boot
 
@@ -102,7 +102,8 @@ if (![boolean]$recentSessions -and ![boolean]$activeSessions -and ($Uptime -ge $
         $_.Exception | Out-File $logFile -Append
         Break
     }         
-}else {
+}
+else {
     log_ "Recent Sessions: '$([boolean]$recentSessions)' ; Active Sessions: '$([boolean]$activeSessions)' ; In StandBy: $($Uptime -ge $tags[$tagName_MinimumStandbyTime]) ### Deallocate VM? : FALSE"
     log_ "Preferred status of the VM : RUNNING"
 }

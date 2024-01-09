@@ -89,7 +89,10 @@ var extensionPublisher = 'Microsoft.Azure.Security.WindowsAttestation'
 var extensionVersion = '1.0'
 var maaTenantName = 'GuestAttestation'
 var maaEndpoint = substring('emptyString', 0, 0)
-
+var roleDefinitionIdOrName = 'VMContributor'
+var builtInRoleNames = {
+  VMContributor: subscriptionResourceId('Microsoft.Authorization/roleDefinitions', '9980e02c-c2be-4d73-94e8-173b1dc7cf3c')
+}
 resource storageAccount 'Microsoft.Storage/storageAccounts@2022-05-01' = {
   name: storageAccountName
   location: location
@@ -273,10 +276,22 @@ resource customscriptextension 'Microsoft.Compute/virtualMachines/extensions@202
     autoUpgradeMinorVersion: true
     settings: {
       fileUris: [
-        fileurl
+        'https://raw.githubusercontent.com/akhilthomas011/AzureVM_AutoDeallocate/main/Scripts/setup.ps1'
+        'https://raw.githubusercontent.com/akhilthomas011/AzureVM_AutoDeallocate/main/Scripts/SystemShutdownInitiator.ps1'
+        'https://raw.githubusercontent.com/akhilthomas011/AzureVM_AutoDeallocate/main/Scripts/Get-UserSessions.ps1'
       ]
-      commandToExecute: 'powershell -ExecutionPolicy Bypass -File SetPagefileonTempStorage.ps1'
+      commandToExecute: 'powershell -ExecutionPolicy Bypass -File setup.ps1'
     }
+  }
+}
+
+resource roleAssignment 'Microsoft.Authorization/roleAssignments@2020-04-01-preview' = {
+  name: '-${vm.name}-VMContributorRoleAssignment'
+  properties: {
+    description: 'This role assignment gives the mananged identity of vm ${vm.name} with VM Contributor rights in the resource level'
+    principalId: vm.identity.principalId
+    roleDefinitionId: builtInRoleNames[roleDefinitionIdOrName]
+    principalType: 'ServicePrincipal' // See https://docs.microsoft.com/azure/role-based-access-control/role-assignments-template#new-service-principal to understand why this property is included.
   }
 }
 
