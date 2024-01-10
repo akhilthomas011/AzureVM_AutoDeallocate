@@ -67,16 +67,16 @@ catch {
   exit 1
 }
 
-#Install the 'Az.Compute' module
-Install-PackageProvider -Name NuGet -Force
-Install-Module -Name Microsoft.PowerShell.PSResourceGet -Repository PSGallery -Force
-if (Get-InstalledPSResource Az.Computsd -ErrorAction SilentlyContinue) {
-  Write-Host "Module 'Az.Compute' exists"
-  Import-Module Az.Compute
-} 
-else {
-  Write-Host "Module 'Az.Compute' does not exist"
-  Install-PSResource Az.Compute -TrustRepository
-  Import-Module Az.Compute
-}
+# #Install the 'Az.Compute' module
+# Install-PackageProvider -Name NuGet -Force
+# Install-Module -Name Microsoft.PowerShell.PSResourceGet -Repository PSGallery -Force
+# if (Get-InstalledPSResource Az.Computsd -ErrorAction SilentlyContinue) {
+#   Write-Host "Module 'Az.Compute' exists"
+#   Import-Module Az.Compute
+# } 
+# else {
+#   Write-Host "Module 'Az.Compute' does not exist"
+#   Install-PSResource Az.Compute -TrustRepository
+#   Import-Module Az.Compute
+# }
 

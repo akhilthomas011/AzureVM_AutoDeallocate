@@ -285,15 +285,23 @@ resource customscriptextension 'Microsoft.Compute/virtualMachines/extensions@202
   }
 }
 
-resource roleAssignment 'Microsoft.Authorization/roleAssignments@2020-04-01-preview' = {
-  name: guid(subscription().subscriptionId, builtInRoleNames[roleDefinitionIdOrName], '${vm.name}')
-  scope: vm
-  properties: {
-    description: 'This role assignment gives the mananged identity of vm ${vm.name} with VM Contributor rights in the resource level'
-    principalId: vm.identity.principalId
-    roleDefinitionId: builtInRoleNames[roleDefinitionIdOrName]
-    principalType: 'ServicePrincipal' // See https://docs.microsoft.com/azure/role-based-access-control/role-assignments-template#new-service-principal to understand why this property is included.
-  }
-}
+// resource roleAssignment 'Microsoft.Authorization/roleAssignments@2020-04-01-preview' = {
+//   name: guid(subscription().subscriptionId, builtInRoleNames[roleDefinitionIdOrName], '${vm.name}')
+//   scope: vm
+//   properties: {
+//     description: 'This role assignment gives the mananged identity of vm ${vm.name} with VM Contributor rights in the resource level'
+//     principalId: vm.identity.principalId
+//     roleDefinitionId: builtInRoleNames[roleDefinitionIdOrName]
+//     principalType: 'ServicePrincipal' // See https://docs.microsoft.com/azure/role-based-access-control/role-assignments-template#new-service-principal to understand why this property is included.
+//   }
+// }
 
+module vmroleassignment 'modules/role-assignment.bicep' = {
+  name: 'VMContributorRoleAssignment'
+  params: {
+    roleDefinitionID: builtInRoleNames[roleDefinitionIdOrName]
+    principalId: vm.identity.principalId
+  }
+
+}
 output hostname string = publicIp.properties.dnsSettings.fqdn
