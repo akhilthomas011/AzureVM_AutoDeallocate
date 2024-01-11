@@ -7,7 +7,7 @@ param principalId string
 @description('Name of the VM for which role should be assigned.')
 param vmName string
 
-resource vm 'Microsoft.ScVmm/virtualMachines@2023-04-01-preview' existing = {
+resource vm 'Microsoft.Compute/virtualMachines@2022-03-01' existing = {
   name: vmName
 }
 
