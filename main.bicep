@@ -190,7 +190,7 @@ resource vm 'Microsoft.Compute/virtualMachines@2022-03-01' = {
   }
   tags: {
     autodeallocate_minSessionIdleTime: '10'
-    autodeallocate_minStandbyTime: '10'
+    autodeallocate_minStandbyTime: '30'
     autodeallocate_statusCheckInterval: 'PT5M'
   }
   properties: {
