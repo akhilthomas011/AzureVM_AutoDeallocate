@@ -189,9 +189,11 @@ resource vm 'Microsoft.Compute/virtualMachines@2022-03-01' = {
     type: 'SystemAssigned'
   }
   tags: {
+    autodeallocate_Enabled: 'true'
     autodeallocate_minSessionIdleTime: '10'
     autodeallocate_minStandbyTime: '30'
     autodeallocate_statusCheckInterval: 'PT5M'
+    autodeallocate_ForceShutDown: 'false'
   }
   properties: {
     hardwareProfile: {

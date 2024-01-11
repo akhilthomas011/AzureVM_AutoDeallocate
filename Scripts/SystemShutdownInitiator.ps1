@@ -4,12 +4,17 @@ $ErrorActionPreference = "Stop"
 
 #variables
 $tags = @{}
+$tagName_Enabled = 'autodeallocate_Enabled'
 $tagName_MinimumSessionIdleTime = 'autodeallocate_minSessionIdleTime'
 $tagName_MinimumStandbyTime = 'autodeallocate_minStandbyTime'
 $tagName_SessionStatusCheckInterval = 'autodeallocate_statusCheckInterval'
+$tagName_ForceShutDown = 'autodeallocate_ForceShutDown'
+
+$tags[$tagName_Enabled] = 'True'
 $tags[$tagName_MinimumSessionIdleTime] = '30'
 $tags[$tagName_MinimumStandbyTime] = '30'
 $tags[$tagName_SessionStatusCheckInterval] = 'PT10M'
+$tags[$tagName_ForceShutDown] = 'False'
 
 $scheduledTaskName = "Auto_Shutdown_Scheduler"
 
@@ -69,8 +74,28 @@ $($vm.tags).Split(';') | foreach {
     if ($($_.Split(':')[0]) -imatch "$tagName_SessionStatusCheckInterval") {
         $tags[$tagName_SessionStatusCheckInterval] = $_.Split(':')[1]
     }
+    if ($($_.Split(':')[0]) -imatch "$tagName_Enabled") {
+        $tags[$tagName_Enabled] = $_.Split(':')[1]
+    }
+    if ($($_.Split(':')[0]) -imatch "$tagName_ForceShutDown") {
+        $tags[$tagName_ForceShutDown] = $_.Split(':')[1]
+    }   
 }
 log_ "VM: $($vm.name); RG: $($vm.resourceGroupName); SubscriptionID: $($vm.subscriptionId)"
+log_ "Autodeallocation Enabled: $($tags[$tagName_Enabled])"
+
+try {
+    $enabled = [System.Convert]::ToBoolean($($tags[$tagName_Enabled]).ToLower()) 
+}
+catch [FormatException] {
+    $enabled = $false
+}
+
+if (!$enabled) {
+    log_ "Auto Deallocation Not Enabled; Exiting script execution"
+    exit
+}
+
 log_ "Minimum Session Idle Time is: $($tags[$tagName_MinimumSessionIdleTime])"
 log_ "Minimum StandBy Time is: $($tags[$tagName_MinimumStandbyTime])"
 log_ "Status check interval is: $($tags[$tagName_SessionStatusCheckInterval])"
@@ -83,6 +108,15 @@ $Task | Set-ScheduledTask
 . .\Get-UserSessions.ps1
 log_  "Session Finder script executed"
 $activeSessions = Get-UserSession | ? { ($_.State -eq "Active") }  #Get all Active sessions
+try {
+    $forceShutDownEnabled = [System.Convert]::ToBoolean($($tags[$tagName_ForceShutDown]).ToLower()) 
+}
+catch [FormatException] {
+    $forceShutDownEnabled = $false
+}
+if ($forceShutDownEnabled) {
+    $activeSessions = $false
+}
 $recentSessions = Get-UserSession -parseIdleTime | ? { ($_.idletime -lt $(New-TimeSpan -minutes $tags[$tagName_MinimumSessionIdleTime])) }   #Get all recent sessions
 $startTime = (Get-CimInstance -ClassName win32_operatingsystem | select lastbootuptime).lastbootuptime  #Get the time of last boot
 $Uptime = (NEW-TIMESPAN -Start $startTime -End $(Get-Date)).TotalMinutes                                   #Get time since last boot
