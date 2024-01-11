@@ -89,10 +89,6 @@ var extensionPublisher = 'Microsoft.Azure.Security.WindowsAttestation'
 var extensionVersion = '1.0'
 var maaTenantName = 'GuestAttestation'
 var maaEndpoint = substring('emptyString', 0, 0)
-var roleDefinitionIdOrName = 'VMContributor'
-var builtInRoleNames = {
-  VMContributor: subscriptionResourceId('Microsoft.Authorization/roleDefinitions', '9980e02c-c2be-4d73-94e8-173b1dc7cf3c')
-}
 resource storageAccount 'Microsoft.Storage/storageAccounts@2022-05-01' = {
   name: storageAccountName
   location: location
