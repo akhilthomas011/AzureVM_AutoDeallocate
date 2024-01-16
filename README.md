@@ -13,14 +13,14 @@ In contrast, the script in this repository creates a scheduled task that checks 
 
 - The Virtual Machine OS should be **`Windows`**
 - The Virtual Machine should have a `System Assigned Managed Identity` assigned to it with `Virtual Machine Contributor` privileges.
-- Optionally, the Virtual Machine should have the below tags with the values you prefer:
+- Optionally, the Virtual Machine can have the below tags with the values you prefer. If the tag is not set, the default value is applied:
   | Tag | Default Value | Purpose | Type | Usage |
   | - | - | - | - | - |
-  |autodeallocate_Enabled|`true` | To Enable/Disable the auto deallocation | *Boolean* | **`true`**/**`false`** : Set to **`true`** to enable, **`false`** to disable
+  |autodeallocate_Enabled|`true` | To Enable/Disable the auto deallocation | *Boolean* | **`true`**/**`false`** : Set to **`true`** to enable, **`false`** to disable |
   |autodeallocate_minSessionIdleTime| `10` | The maximum threshold idle time of the session (minutes) after which the session is considered to be inactive | *Int* | Any value from 1 to 1440 |
   |autodeallocate_minStandbyTime| `30` | The minimum standby time for the machine after a start before which it is not considered for deallocation | *Int* | Any value from 1 to 1440 |
-  |autodeallocate_statusCheckInterval| `PT5M` | The interval at which the status of session in the Virtual Machine is checked.
-  |autodeallocate_ForceShutDown| `false` |
+  |autodeallocate_statusCheckInterval| `PT5M` | The interval at which the status of session in the Virtual Machine is checked. Value should be lower than *minSessionIdleTime* & *minStandbyTime*. | *TimeInterval* | Any time interval in the format *`P<days>DT<hours>H<minutes>M<seconds>S`* |
+  |autodeallocate_ForceShutDown| `false` | Enable or Disable the force shutdown feature, which will deallocate the VM even when a user is connected, if the user surpasses the maximum idle time.| *Boolean* | **`true`**/**`false`** : Set to **`true`** to enable, **`false`** to disable |
 
 
 
