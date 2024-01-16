@@ -26,7 +26,10 @@ In contrast, the script in this repository creates a scheduled task that checks 
 
 The solution can be implemented in multiple ways:
 - Run the script independently on existing VMs
-- Run the script as an extension on existing VMs
-- Deploy a new VM using the script extension using *Azure CLI*/*ARM*/*Bicep*/*Terraform* (Sample ARM & Bicep is given)
+- Run the script as a custom script extension on existing VMs
+- Deploy a new VM using the custom script extension using *Azure CLI*/*ARM*/*Bicep*/*Terraform* (Sample ARM & Bicep is given)
 
+### Run the script individually
+
+### Deploy as custom script extension
 
