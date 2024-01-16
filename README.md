@@ -4,7 +4,7 @@
  This repository contains scripts that automatically deallocate a VM when it is not in active use. The scripts are completely native and do not rely on any third-party sources.
  
  
- ## How it works
+ ## Approach
  The approach used by these scripts differs from other methods, such as using DevTestLabs or Azure Automation to schedule the start/stop of the VM. These methods have the disadvantage of not considering whether the user is actively using the machine and requiring the machine to wait until the scheduled time to deallocate.
 
 In contrast, the script in this repository creates a scheduled task that checks for active user sessions on the virtual machine at a specified interval. It also checks if the virtual machine has exceeded the maximum idle standby time. If both conditions are met, the scheduled task deallocates the virtual machine using the permissions granted to the System Assigned Managed Identity, from within the VM.
@@ -22,6 +22,11 @@ In contrast, the script in this repository creates a scheduled task that checks 
   |autodeallocate_statusCheckInterval| `PT5M` | The interval at which the status of session in the Virtual Machine is checked. Value should be lower than *minSessionIdleTime* & *minStandbyTime*. | *TimeInterval* | Any time interval in the format *`P<days>DT<hours>H<minutes>M<seconds>S`* |
   |autodeallocate_ForceShutDown| `false` | Enable or Disable the force shutdown feature, which will deallocate the VM even when a user is connected, if the user surpasses the maximum idle time.| *Boolean* | **`true`**/**`false`** : Set to **`true`** to enable, **`false`** to disable |
 
+## How it works
 
+The solution can be implemented in multiple ways:
+- Run the script independently on existing VMs
+- Run the script as an extension on existing VMs
+- Deploy a new VM using the script extension using *Azure CLI*/*ARM*/*Bicep*/*Terraform* (Sample ARM & Bicep is given)
 
 
