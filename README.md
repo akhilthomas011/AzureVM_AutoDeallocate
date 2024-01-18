@@ -39,5 +39,9 @@ To run the script individually on existing virtual machines;
 5. Run the **setup.ps1** powershell script under **Scripts** folder.
 ### Deploy as custom script extension
 
-To deploy a new virtual machine with Auto Deallocation capabilities;
+To deploy a new virtual machine with Auto Deallocation capabilities, you can use the **setup.ps1** powershell script as custom script extension. A sample Bicep file **main.bicep** and an ARM template **main.json** has been provided in the root folder.
+
+> Note: The Bicep and ARM template is intended only for demonstration purposes and shouldn't be used as such, since it does not meet the *`Secure by Default`* Microsoft standards.
+
+The main components of the Bicep is:
 1. 
