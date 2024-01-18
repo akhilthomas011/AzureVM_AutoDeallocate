@@ -43,5 +43,9 @@ To deploy a new virtual machine with Auto Deallocation capabilities, you can use
 
 > Note: The Bicep and ARM template is intended only for demonstration purposes and shouldn't be used as such, since it does not meet the *`Secure by Default`* Microsoft standards.
 
-The main components of the Bicep is:
-1. 
+The main components of the Bicep/ARM are:
+1. Creating a Virtual Machine
+2. Assigning a `System Assigned Managed Identity` to the virtual machine.
+3. Assigning `Virtual Machine Contributor` role to the Managed Identity in the scope of the deployed virtual machine
+4. Adding the tags to the virtual machine
+5. Adding a custom script extension to run the **setup.ps1** powershell script under **Scripts** folder.
