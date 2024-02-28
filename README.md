@@ -5,9 +5,16 @@
  
  
  ## Approach
- The approach used by these scripts differs from other methods, such as using DevTestLabs or Azure Automation to schedule the start/stop of the VM. These methods have the disadvantage of not considering whether the user is actively using the machine and requiring the machine to wait until the scheduled time to deallocate.
+ ### Current solutions
+ The solutions that are currently available to deallocate a VM automtically are:
+ - Autoshutdown using DevTestLabs
+ - Azure automation account runbooks
 
-In contrast, the script in this repository creates a scheduled task that checks for active user sessions on the virtual machine at a specified interval. It also checks if the virtual machine has exceeded the maximum idle standby time. If both conditions are met, the scheduled task deallocates the virtual machine using the permissions granted to the System Assigned Managed Identity, from within the VM.
+ These solutions deallocate a VM based on schedules, irrespective of users actively using the VM. As a result, the VM will keep on running until it reaches the scheduled time, increasing the cost. Also, the users may get disconnected from the VM abruptly on reaching the scheduled time.    
+ 
+ ### Proposed solution
+
+The approach used by this solution differs from other methods, such as using DevTestLabs or Azure Automation to schedule the start/stop of the VM. The script in this repository creates a scheduled task that checks for active user sessions on the virtual machine at a specified interval. It also checks if the virtual machine has exceeded the maximum idle standby time. If both conditions are met, the scheduled task deallocates the virtual machine using the permissions granted to the System Assigned Managed Identity, from within the VM.
 
 ## Prerequisites
 
