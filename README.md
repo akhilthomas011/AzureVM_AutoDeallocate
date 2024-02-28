@@ -34,7 +34,7 @@ The solution can be implemented in multiple ways:
 To run the script individually on existing virtual machines;
 1. Assign a `System Assigned Managed Identity` to the virtual machine with `Virtual Machine Contributor` privileges.
 2. Add the tags (optional) to the virtual machine described in the prerequisites sction.
-3. Copy the **Scripts** folder to any permanent drive folders (e.g. *'C:/AutoDeallocation'*)
+3. Copy the **Scripts** folder to any permanent drive folders (e.g. *'C:\AutoDeallocation'*)
 4. Open Powershell as an Administrator
 5. Run the **setup.ps1** powershell script under **Scripts** folder.
 ### Deploy as custom script extension
