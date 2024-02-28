@@ -1,7 +1,7 @@
 # Auto Deallocate Azure VMs
 
 ## Description
- This repository contains scripts that automatically deallocate a VM when it is not in active use. The scripts are completely native and do not rely on any third-party sources.
+ This repository contains scripts that automatically deallocate a VM when it is not being used by an active user. The scripts are completely native and do not rely on any third-party sources.
  
  
  ## Approach
